@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manutenzione — Hotel Apogeo</title>
+
+<!-- Firebase v10 CDN -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+<style>
+:root {
+  --bg: #f5f3ee;
+  --surface: #ffffff;
+  --surface2: #f0ede6;
+  --border: rgba(0,0,0,0.10);
+  --border2: rgba(0,0,0,0.18);
+  --text: #1a1a18;
+  --text2: #6b6860;
+  --text3: #9a9890;
+  --gold: #d4a017;
+  --gold-dk: #b8880f;
+  --radius: 10px;
+  --radius-lg: 14px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1a1917;
+    --surface: #242320;
+    --surface2: #2e2c28;
+    --border: rgba(255,255,255,0.10);
+    --border2: rgba(255,255,255,0.18);
+    --text: #f0ead6;
+    --text2: #a0998c;
+    --text3: #6b6560;
+  }
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; min-height: 100vh; }
+
+/* ── TOPBAR ── */
+.topbar {
+  background: #1a1a14;
+  color: #f0ead6;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 54px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.06);
+}
+.logo { width: 34px; height: 34px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; color: #1a1a14; flex-shrink: 0; }
+.topbar-title { font-size: 15px; font-weight: 500; flex: 1; }
+.topbar-sub { font-size: 11px; color: #888; }
+.nav-tabs { display: flex; gap: 4px; }
+.nav-tab { padding: 6px 16px; border-radius: 8px; font-size: 12px; font-weight: 500; cursor: pointer; border: 1.5px solid transparent; background: transparent; color: #888; transition: all .15s; }
+.nav-tab.active { background: var(--gold); color: #1a1a14; border-color: var(--gold); }
+.nav-tab:hover:not(.active) { color: #f0ead6; border-color: #444; }
+.sync-status { font-size: 11px; color: #666; display: flex; align-items: center; gap: 5px; }
+.sync-dot { width: 7px; height: 7px; border-radius: 50%; background: #4caf50; }
+.sync-dot.syncing { background: var(--gold); animation: pulse 1s infinite; }
+.sync-dot.error { background: #f44336; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+/* ── CONTENT ── */
+.content { max-width: 960px; margin: 0 auto; padding: 16px; }
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── STATS BAR ── */
+.stats-bar { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+.stat-pill { display: flex; align-items: center; gap: 5px; padding: 5px 13px; border-radius: 20px; font-size: 11px; font-weight: 500; border: 0.5px solid var(--border); background: var(--surface); color: var(--text2); }
+.dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.dok{background:#4caf50;} .dwarn{background:#ff9800;} .dfix{background:#f44336;} .durg{background:#9c27b0;} .dunc{background:#bbb;}
+.stat-num { font-weight: 700; color: var(--text); margin-left: 2px; }
+
+/* ── MAIN LAYOUT ── */
+.main-layout { display: flex; gap: 14px; align-items: flex-start; }
+.floor-section { flex: 1; min-width: 0; }
+.side-panel { width: 220px; flex-shrink: 0; }
+@media (max-width: 680px) { .main-layout { flex-direction: column; } .side-panel { width: 100%; } }
+
+.floor-label { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .08em; margin: 0 0 8px 2px; }
+.rooms-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.room-btn {
+  width: 52px; height: 52px; border-radius: 11px; border: 2px solid var(--border2);
+  font-size: 11px; font-weight: 700; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  background: var(--surface2); color: var(--text);
+  transition: transform .1s, box-shadow .1s;
+}
+.room-btn:hover { transform: scale(1.1); box-shadow: 0 4px 12px rgba(0,0,0,.15); z-index: 2; }
+.room-btn.s-ok  { background: #e8f5e9; border-color: #4caf50; color: #1b5e20; }
+.room-btn.s-warn{ background: #fff3e0; border-color: #ff9800; color: #e65100; }
+.room-btn.s-fix { background: #ffebee; border-color: #f44336; color: #b71c1c; }
+.room-btn.s-urg { background: #f3e5f5; border-color: #9c27b0; color: #4a148c; }
+.room-btn .rn { font-size: 13px; line-height: 1; }
+.room-btn .ri { font-size: 10px; }
+
+/* ── CARDS ── */
+.card { background: var(--surface); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 14px; margin-bottom: 12px; }
+.card h3 { font-size: 12px; font-weight: 600; margin-bottom: 10px; color: var(--text); }
+.rlist { max-height: 180px; overflow-y: auto; }
+.ri-item { font-size: 11px; padding: 6px 8px; margin-bottom: 4px; border-radius: 6px; background: var(--surface2); border-left: 3px solid #f44336; color: var(--text); line-height: 1.4; }
+.ri-item.p-warn { border-left-color: #ff9800; }
+.ri-item.p-urg { border-left-color: #9c27b0; }
+.ri-meta { font-size: 10px; color: var(--text2); margin-top: 2px; }
+.ri-none { font-size: 11px; color: var(--text3); font-style: italic; }
+
+/* ── FORM ELEMENTS ── */
+select, input[type=text], textarea {
+  width: 100%; font-size: 12px; border-radius: 8px; padding: 6px 9px;
+  border: 0.5px solid var(--border2); background: var(--surface2);
+  color: var(--text); font-family: inherit; margin-bottom: 7px;
+}
+textarea { resize: vertical; min-height: 58px; }
+.btn-dark { width: 100%; padding: 8px; border-radius: 8px; background: #1a1a14; color: #f0ead6; border: none; font-size: 12px; font-weight: 500; cursor: pointer; margin-top: 2px; }
+.btn-dark:hover { background: #333; }
+
+/* ── MODAL ── */
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 200; display: flex; align-items: flex-start; justify-content: center; padding: 16px; overflow-y: auto; }
+.overlay.hid { display: none; }
+.modal { background: var(--surface); border-radius: var(--radius-lg); border: 0.5px solid var(--border); width: 100%; max-width: 620px; margin: auto; flex-shrink: 0; }
+.mhdr { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; background: #1a1a14; border-radius: var(--radius-lg) var(--radius-lg) 0 0; color: #f0ead6; }
+.mhdr h2 { font-size: 15px; font-weight: 500; }
+.mhdr-meta { font-size: 10px; color: #888; margin-top: 2px; }
+.mbtn-close { background: none; border: none; color: #f0ead6; font-size: 22px; cursor: pointer; padding: 2px 6px; line-height: 1; }
+.mbody { padding: 14px 18px; max-height: 58vh; overflow-y: auto; }
+.mfooter { padding: 12px 18px; border-top: 0.5px solid var(--border); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.sec-title { font-size: 10px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: .07em; margin: 14px 0 7px; padding-bottom: 4px; border-bottom: 0.5px solid var(--border); }
+.sec-title:first-child { margin-top: 0; }
+.chk-item { display: flex; align-items: flex-start; gap: 7px; padding: 4px 5px; border-radius: 6px; cursor: pointer; font-size: 12px; color: var(--text); }
+.chk-item:hover { background: var(--surface2); }
+.chk-item input { margin-top: 2px; cursor: pointer; flex-shrink: 0; }
+.chk-item.ck { text-decoration: line-through; color: var(--text3); }
+.prog-wrap { height: 4px; background: var(--border); border-radius: 2px; margin: 7px 0 14px; }
+.prog-bar { height: 4px; border-radius: 2px; background: #4caf50; transition: width .3s; }
+.occ-row { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--text2); margin-bottom: 9px; }
+.manut-in { margin-bottom: 10px; }
+.prob-row { display: flex; align-items: flex-start; gap: 7px; margin-top: 5px; padding: 7px; background: var(--surface2); border-radius: 8px; border-left: 3px solid #ff9800; }
+.prob-row.p-fix { border-left-color: #f44336; }
+.prob-row.p-urg { border-left-color: #9c27b0; }
+.prob-ta { flex: 1; font-size: 12px; background: transparent; border: none; color: var(--text); font-family: inherit; resize: none; min-height: 32px; margin: 0; padding: 0; width: auto; }
+.prob-prio { font-size: 11px; border: none; background: transparent; cursor: pointer; color: var(--text); flex-shrink: 0; padding: 0; margin: 0; width: auto; }
+.prob-rm { background: none; border: none; color: #f44336; cursor: pointer; font-size: 18px; padding: 0 3px; line-height: 1; }
+.btn-add-prob { font-size: 12px; padding: 5px 12px; border-radius: 8px; border: 0.5px dashed var(--border2); background: none; cursor: pointer; color: var(--text2); margin-top: 6px; }
+.esito-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 7px; }
+.es-btn { flex: 1; min-width: 80px; padding: 8px 4px; border-radius: 8px; border: 1.5px solid var(--border2); cursor: pointer; font-size: 11px; font-weight: 500; background: var(--surface2); color: var(--text2); text-align: center; }
+.es-btn.sel-ok  { background: #e8f5e9; border-color: #4caf50; color: #1b5e20; }
+.es-btn.sel-warn{ background: #fff3e0; border-color: #ff9800; color: #e65100; }
+.es-btn.sel-fix { background: #ffebee; border-color: #f44336; color: #b71c1c; }
+.es-btn.sel-urg { background: #f3e5f5; border-color: #9c27b0; color: #4a148c; }
+.btn-save { padding: 8px 22px; border-radius: 8px; border: none; background: #1a1a14; color: #f0ead6; font-size: 13px; font-weight: 500; cursor: pointer; }
+.btn-save:hover { background: #333; }
+.btn-rst { padding: 8px 13px; border-radius: 8px; border: 0.5px solid var(--border2); background: none; color: var(--text2); font-size: 12px; cursor: pointer; }
+
+/* ── REGISTRO ── */
+.reg-toolbar { display: flex; gap: 8px; margin-bottom: 13px; flex-wrap: wrap; align-items: center; }
+.reg-toolbar select { width: auto; margin: 0; }
+.reg-toolbar input { flex: 1; min-width: 120px; margin: 0; }
+.reg-count { font-size: 11px; color: var(--text3); white-space: nowrap; }
+.table-wrap { overflow-x: auto; }
+.reg-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.reg-table th { text-align: left; padding: 7px 10px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--text3); border-bottom: 0.5px solid var(--border); background: var(--surface2); }
+.reg-table td { padding: 8px 10px; border-bottom: 0.5px solid var(--border); vertical-align: top; color: var(--text); }
+.reg-table tr:hover td { background: var(--surface2); }
+.reg-table tbody tr { border-left: 3px solid transparent; }
+.reg-table tbody tr.row-check { border-left-color: #2196F3; }
+.reg-table tbody tr.row-ok    { border-left-color: #4caf50; }
+.reg-table tbody tr.row-warn  { border-left-color: #ff9800; }
+.reg-table tbody tr.row-fix   { border-left-color: #f44336; }
+.reg-table tbody tr.row-urg   { border-left-color: #9c27b0; }
+.reg-table tbody tr.row-solved{ border-left-color: #4caf50; opacity: .7; }
+
+.badge { display: inline-block; font-size: 10px; font-weight: 500; padding: 2px 7px; border-radius: 12px; white-space: nowrap; }
+.badge-check  { background: #e3f2fd; color: #0d47a1; }
+.badge-ok     { background: #e8f5e9; color: #1b5e20; }
+.badge-warn   { background: #fff3e0; color: #e65100; }
+.badge-fix    { background: #ffebee; color: #b71c1c; }
+.badge-urg    { background: #f3e5f5; color: #4a148c; }
+.badge-solved { background: #e8f5e9; color: #1b5e20; }
+.badge-open   { background: #ffebee; color: #b71c1c; }
+
+.solve-btn { font-size: 11px; padding: 3px 8px; border-radius: 6px; border: 0.5px solid var(--border2); background: none; cursor: pointer; color: var(--text2); white-space: nowrap; }
+.solve-btn:hover { background: var(--surface2); }
+.solve-btn.solved-st { color: #4caf50; border-color: #4caf50; }
+.reg-empty { text-align: center; padding: 50px 20px; color: var(--text3); font-size: 13px; }
+
+/* ── LOADER ── */
+.loader { text-align: center; padding: 60px 20px; color: var(--text3); font-size: 13px; }
+.spinner { width: 28px; height: 28px; border: 3px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 14px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">K</div>
+  <div class="topbar-title">
+    Camere Apogeo
+    <div class="topbar-sub" id="hdr-date"></div>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPage('griglia')" id="tab-griglia">Manutenzione</button>
+    <button class="nav-tab" onclick="showPage('registro')" id="tab-registro">Registro</button>
+  </div>
+  <div class="sync-status">
+    <div class="sync-dot" id="sync-dot"></div>
+    <span id="sync-label">Connesso</span>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- PAGE GRIGLIA -->
+  <div class="page active" id="page-griglia">
+    <div id="loader-griglia" class="loader"><div class="spinner"></div>Caricamento dati...</div>
+    <div id="griglia-content" style="display:none;">
+      <div class="stats-bar">
+        <div class="stat-pill"><span class="dot dunc"></span>Non controllate <span class="stat-num" id="s-unc">35</span></div>
+        <div class="stat-pill"><span class="dot dok"></span>OK <span class="stat-num" id="s-ok">0</span></div>
+        <div class="stat-pill"><span class="dot dwarn"></span>Monitorare <span class="stat-num" id="s-warn">0</span></div>
+        <div class="stat-pill"><span class="dot dfix"></span>Riparare <span class="stat-num" id="s-fix">0</span></div>
+        <div class="stat-pill"><span class="dot durg"></span>Urgente <span class="stat-num" id="s-urg">0</span></div>
+      </div>
+      <div class="main-layout">
+        <div class="floor-section">
+          <div class="floor-label">Primo piano</div>
+          <div class="rooms-grid" id="grid-p1"></div>
+          <div class="floor-label">Piano terra</div>
+          <div class="rooms-grid" id="grid-p0"></div>
+        </div>
+        <div class="side-panel">
+          <div class="card">
+            <h3>⚠️ Problemi aperti</h3>
+            <div class="rlist" id="prob-list"><div class="ri-none">Nessun problema aperto</div></div>
+          </div>
+          <div class="card">
+            <h3>🔧 Segnalazione straordinaria</h3>
+            <select id="ex-room"><option value="">Camera...</option></select>
+            <select id="ex-prio">
+              <option value="fix">🔧 Da riparare</option>
+              <option value="urg">🚨 Urgente</option>
+              <option value="warn">⚠️ Da monitorare</option>
+            </select>
+            <textarea id="ex-desc" placeholder="Descrivi il problema..."></textarea>
+            <button class="btn-dark" onclick="addExtra()">+ Aggiungi segnalazione</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE REGISTRO -->
+  <div class="page" id="page-registro">
+    <div class="reg-toolbar">
+      <select id="fil-type" onchange="renderReg()">
+        <option value="">Tutti i tipi</option>
+        <option value="check">Controlli ordinari</option>
+        <option value="prob">Problemi / segnalazioni</option>
+      </select>
+      <select id="fil-room" onchange="renderReg()"><option value="">Tutte le camere</option></select>
+      <select id="fil-stato" onchange="renderReg()">
+        <option value="">Tutti gli stati</option>
+        <option value="open">Aperto</option>
+        <option value="solved">Risolto</option>
+      </select>
+      <input type="text" id="fil-search" placeholder="Cerca..." oninput="renderReg()">
+      <span class="reg-count" id="reg-count"></span>
+    </div>
+    <div id="loader-reg" class="loader"><div class="spinner"></div>Caricamento registro...</div>
+    <div id="registro-content" style="display:none;">
+      <div class="table-wrap">
+        <table class="reg-table">
+          <thead>
+            <tr>
+              <th style="width:65px">Camera</th>
+              <th style="width:88px">Data</th>
+              <th>Tipo / Descrizione</th>
+              <th style="width:95px">Priorità / Esito</th>
+              <th style="width:80px">Stato</th>
+              <th style="width:90px">Risolto il</th>
+              <th style="width:80px"></th>
+            </tr>
+          </thead>
+          <tbody id="reg-tbody"></tbody>
+        </table>
+      </div>
+      <div class="reg-empty" id="reg-empty" style="display:none;">Nessun record trovato.</div>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<!-- MODAL CAMERA -->
+<div class="overlay hid" id="overlay">
+  <div class="modal">
+    <div class="mhdr">
+      <div><h2 id="m-title">Camera</h2><div class="mhdr-meta" id="m-meta"></div></div>
+      <button class="mbtn-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="mbody" id="m-body"></div>
+    <div class="mfooter">
+      <button class="btn-save" onclick="saveRoom()">Salva controllo</button>
+      <button class="btn-rst" onclick="resetRoom()">Azzera</button>
+      <div style="flex:1;"></div>
+      <span style="font-size:10px;color:var(--text3);" id="m-lastdate"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── FIREBASE CONFIG ──────────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyDmyAFnQHzlhU6Jp6XurWZ4g3MB81TtB_w",
+  authDomain: "apogeo-manutenzione.firebaseapp.com",
+  projectId: "apogeo-manutenzione",
+  storageBucket: "apogeo-manutenzione.firebasestorage.app",
+  messagingSenderId: "183299664105",
+  appId: "1:183299664105:web:fff32632425e8a0b9de878"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// ── DATI CAMERE ──────────────────────────────────────────────────
+const P1 = ['130','14','15','16','18','20','21','22','23','24','25','26','28a','28b','29','30','31','32','33','34'];
+const P0 = ['35','36','37','38','39','40','41a','41b','42','43','44','45','46','47','48'];
+const ALL = [...P1, ...P0];
+
+const CL = [
+  {s:'1. Porta e accesso', it:['Apertura corretta con chiave','Serratura fluida','Chiusura interna funzionante','Porta allineata','Guarnizioni integre','Numero camera integro','Pareti ingresso senza crepe/macchie','Pavimento ingresso integro']},
+  {s:'2. Impianto elettrico e luci', it:['Luce ingresso funzionante','Luci comodino funzionanti','Luci bagno funzionanti','Lampadine integre','Prese funzionanti e placche integre','Nessun segno di bruciatura','Interruttori funzionanti']},
+  {s:'3. Climatizzazione', it:['Condizionatore funzionante','Modalità caldo/freddo OK','Telecomando funzionante e batterie OK','Filtri puliti','Nessuna perdita acqua / rumori anomali']},
+  {s:'4. TV e frigorifero', it:['TV: accensione corretta','TV: telecomando e canali OK','Frigorifero: raffreddamento corretto','Frigorifero: sportello chiude bene','Frigorifero: nessuna perdita']},
+  {s:'5. Arredi camera', it:['Letto: struttura stabile e nessun cigolio','Testata fissata bene','Materasso in buono stato','Comodini e scrivania stabili','Cassetti funzionanti','Armadio: ante e cerniere integre','Armadio: nessuna muffa o cattivo odore','Cassaforte funzionante (se presente)']},
+  {s:'6. Infissi e tende', it:['Finestre: apertura e chiusura corrette','Vetri integri, nessuna infiltrazione','Tende: scorrimento corretto e supporti fissi','Persiane/avvolgibili: movimento corretto (se presenti)']},
+  {s:'7. Bagno — WC e bidet', it:['Seduta WC stabile e copriwater integro','Scarico WC efficace','Nessuna perdita WC','Silicone WC integro','Bidet: rubinetto stabile e scarico corretto']},
+  {s:'8. Bagno — lavandino e doccia', it:['Scarico lavandino fluido','Acqua calda disponibile, pressione corretta','Rubinetto stabile, nessuna perdita sifone','Specchio integro','Doccia: scarico rapido','Box doccia stabile, guarnizioni integre','Soffione e doccetta funzionanti','Miscelatore corretto','Assenza muffa, silicone integro']},
+  {s:'9. Bagno — accessori e ventilazione', it:['Porta asciugamani e porta carta stabili','Asciugacapelli funzionante','Aspiratore funzionante, nessun rumore anomalo','Nessuna umidità eccessiva']},
+  {s:'10. Muffa, umidità e odori', it:['Nessun odore scarichi / muffa / fumo','Nessuna muffa visibile (tende, armadio, bagno)','Nessuna condensa anomala / pareti umide']},
+  {s:'11. Sicurezza', it:['Rilevatore fumo presente e integro','Cartello emergenza presente','Estintore e naspo accessibili (piano)','Segnaletica e vie di fuga libere']},
+  {s:'12. Controllo estetico', it:['Nessuna necessità di ritinteggiatura','Nessun graffio / macchia permanente visibile','Silicone non annerito, fughe integre','Arredi non eccessivamente usurati']},
+];
+
+// ── STATE ────────────────────────────────────────────────────────
+let rooms = {};
+let registro = [];
+let cur = null;
+let tChk = {}, tProb = [], tEsito = null, tOcc = false, tMan = '';
+
+ALL.forEach(r => { rooms[r] = {status:null,checked:{},problems:[],esito:null,occupied:false,manut:'',date:null}; });
+
+// ── SYNC INDICATOR ───────────────────────────────────────────────
+function setSyncState(state) {
+  const dot = document.getElementById('sync-dot');
+  const lbl = document.getElementById('sync-label');
+  dot.className = 'sync-dot' + (state === 'syncing' ? ' syncing' : state === 'error' ? ' error' : '');
+  lbl.textContent = state === 'syncing' ? 'Salvataggio...' : state === 'error' ? 'Errore rete' : 'Connesso';
+}
+
+// ── FIREBASE LISTENERS ───────────────────────────────────────────
+function initListeners() {
+  // Rooms realtime
+  db.collection('rooms').onSnapshot(snap => {
+    snap.forEach(doc => {
+      if (rooms[doc.id] !== undefined) {
+        rooms[doc.id] = { ...rooms[doc.id], ...doc.data() };
+      }
+    });
+    renderGrid();
+    updateStats();
+    updateProbList();
+    document.getElementById('loader-griglia').style.display = 'none';
+    document.getElementById('griglia-content').style.display = 'block';
+  }, () => setSyncState('error'));
+
+  // Registro realtime
+  db.collection('registro').orderBy('ts', 'asc').onSnapshot(snap => {
+    registro = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    updateProbList();
+    document.getElementById('loader-reg').style.display = 'none';
+    document.getElementById('registro-content').style.display = 'block';
+    if (document.getElementById('page-registro').classList.contains('active')) renderReg();
+  }, () => setSyncState('error'));
+}
+
+// ── WRITE HELPERS ────────────────────────────────────────────────
+async function writeRoom(r, data) {
+  setSyncState('syncing');
+  try {
+    await db.collection('rooms').doc(r).set(data, { merge: true });
+    setSyncState('ok');
+  } catch(e) { setSyncState('error'); }
+}
+
+async function writeRegistro(data) {
+  setSyncState('syncing');
+  try {
+    await db.collection('registro').add({ ...data, ts: firebase.firestore.FieldValue.serverTimestamp() });
+    setSyncState('ok');
+  } catch(e) { setSyncState('error'); }
+}
+
+async function updateRegistroDoc(id, data) {
+  setSyncState('syncing');
+  try {
+    await db.collection('registro').doc(id).update(data);
+    setSyncState('ok');
+  } catch(e) { setSyncState('error'); }
+}
+
+// ── NAV ──────────────────────────────────────────────────────────
+function showPage(p) {
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('page-' + p).classList.add('active');
+  document.getElementById('tab-' + p).classList.add('active');
+  if (p === 'registro') renderReg();
+}
+
+// ── GRIDS ────────────────────────────────────────────────────────
+function renderGrid() {
+  renderGEl(P1, 'grid-p1');
+  renderGEl(P0, 'grid-p0');
+  const sel = document.getElementById('ex-room');
+  sel.innerHTML = '<option value="">Camera...</option>';
+  ALL.forEach(r => { const o = document.createElement('option'); o.value = r; o.textContent = 'Camera ' + r; sel.appendChild(o); });
+  const fs = document.getElementById('fil-room');
+  if (fs) {
+    fs.innerHTML = '<option value="">Tutte le camere</option>';
+    ALL.forEach(r => { const o = document.createElement('option'); o.value = r; o.textContent = 'Camera ' + r; fs.appendChild(o); });
+  }
+}
+
+function renderGEl(roomList, id) {
+  const el = document.getElementById(id);
+  el.innerHTML = '';
+  roomList.forEach(r => {
+    const d = rooms[r];
+    const b = document.createElement('button');
+    b.className = 'room-btn' + (d.status ? ' s-' + d.status : '');
+    b.setAttribute('aria-label', 'Camera ' + r);
+    b.innerHTML = '<span class="rn">' + r + '</span><span class="ri">' + sIcon(d.status) + '</span>';
+    b.onclick = () => openRoom(r);
+    el.appendChild(b);
+  });
+}
+
+function sIcon(s) { return s==='ok'?'✅':s==='warn'?'⚠️':s==='fix'?'🔧':s==='urg'?'🚨':''; }
+
+function updateStats() {
+  let unc=0,ok=0,warn=0,fix=0,urg=0;
+  ALL.forEach(r => {
+    const s = rooms[r].status;
+    if(!s) unc++; else if(s==='ok') ok++; else if(s==='warn') warn++; else if(s==='fix') fix++; else if(s==='urg') urg++;
+  });
+  document.getElementById('s-unc').textContent = unc;
+  document.getElementById('s-ok').textContent = ok;
+  document.getElementById('s-warn').textContent = warn;
+  document.getElementById('s-fix').textContent = fix;
+  document.getElementById('s-urg').textContent = urg;
+}
+
+function updateProbList() {
+  const el = document.getElementById('prob-list');
+  const open = registro.filter(r => r.tipo === 'prob' && !r.solved);
+  if (!open.length) { el.innerHTML = '<div class="ri-none">Nessun problema aperto</div>'; return; }
+  el.innerHTML = open.slice(-8).reverse().map(r =>
+    `<div class="ri-item p-${r.prio}">
+      <strong>Cam. ${esc(r.room)}</strong> — ${esc(r.desc)}
+      <div class="ri-meta">${prioLabel(r.prio)} · ${esc(r.date)}</div>
+    </div>`
+  ).join('');
+}
+
+// ── EXTRA REPORT ─────────────────────────────────────────────────
+async function addExtra() {
+  const room = document.getElementById('ex-room').value;
+  const prio = document.getElementById('ex-prio').value;
+  const desc = document.getElementById('ex-desc').value.trim();
+  if (!room || !desc) { alert('Seleziona una camera e descrivi il problema.'); return; }
+  await writeRegistro({ tipo:'prob', room, date:today(), prio, desc, solved:false, solvedDate:null, manut:'', extra:true });
+  document.getElementById('ex-desc').value = '';
+  document.getElementById('ex-room').value = '';
+}
+
+// ── MODAL ────────────────────────────────────────────────────────
+function openRoom(r) {
+  cur = r;
+  const d = rooms[r];
+  tChk = JSON.parse(JSON.stringify(d.checked || {}));
+  tProb = JSON.parse(JSON.stringify(d.problems || []));
+  tEsito = d.esito || null;
+  tOcc = d.occupied || false;
+  tMan = d.manut || '';
+  document.getElementById('m-title').textContent = 'Camera ' + r;
+  const fl = P1.includes(r) ? 'Primo piano' : 'Piano terra';
+  const st = d.status ? {ok:'OK',warn:'Da monitorare',fix:'Da riparare',urg:'Urgente'}[d.status] : 'Non controllata';
+  document.getElementById('m-meta').textContent = fl + ' · ' + st;
+  document.getElementById('m-lastdate').textContent = d.date ? 'Ultimo: ' + d.date : '';
+  renderMBody();
+  document.getElementById('overlay').classList.remove('hid');
+}
+
+function renderMBody() {
+  let tot = 0, done = 0;
+  CL.forEach(s => s.it.forEach(i => { tot++; if (tChk[i]) done++; }));
+  const pct = tot ? Math.round(done / tot * 100) : 0;
+  let h = '';
+  h += `<div class="occ-row">
+    <input type="checkbox" id="occ" ${tOcc?'checked':''} onchange="tOcc=this.checked">
+    <label for="occ">Camera occupata</label>
+    <span style="flex:1;"></span>
+    <span style="font-size:11px;">${done}/${tot} (${pct}%)</span>
+  </div>`;
+  h += `<div class="prog-wrap"><div class="prog-bar" id="pbar" style="width:${pct}%"></div></div>`;
+  h += `<input type="text" class="manut-in" value="${esc(tMan)}" placeholder="Manutentore..." oninput="tMan=this.value" style="display:block;">`;
+
+  CL.forEach(sec => {
+    h += `<div class="sec-title">${esc(sec.s)}</div>`;
+    sec.it.forEach(it => {
+      const c = tChk[it];
+      const ks = btoa(encodeURIComponent(it)).replace(/[^a-zA-Z0-9]/g,'').substring(0,20);
+      h += `<label class="chk-item ${c?'ck':''}" id="lbl_${ks}">
+        <input type="checkbox" ${c?'checked':''} onchange="tglChk(this,'${it.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;')}','${ks}')">
+        ${esc(it)}
+      </label>`;
+    });
+  });
+
+  h += `<div class="sec-title">Problemi rilevati</div>`;
+  tProb.forEach((p, i) => {
+    h += `<div class="prob-row p-${p.prio}" id="pr${i}">
+      <select class="prob-prio" onchange="tProb[${i}].prio=this.value; document.getElementById('pr${i}').className='prob-row p-'+this.value">
+        <option value="warn" ${p.prio==='warn'?'selected':''}>⚠️</option>
+        <option value="fix"  ${p.prio==='fix' ?'selected':''}>🔧</option>
+        <option value="urg"  ${p.prio==='urg' ?'selected':''}>🚨</option>
+      </select>
+      <textarea class="prob-ta" rows="2" placeholder="Descrivi..." onchange="tProb[${i}].desc=this.value">${esc(p.desc)}</textarea>
+      <button class="prob-rm" onclick="rmProb(${i})">×</button>
+    </div>`;
+  });
+  h += `<button class="btn-add-prob" onclick="addProb()">+ Aggiungi problema</button>`;
+
+  h += `<div class="sec-title">Esito generale</div><div class="esito-row">
+    <button class="es-btn ${tEsito==='ok'  ?'sel-ok':''}"   onclick="setEs('ok')">✅ OK</button>
+    <button class="es-btn ${tEsito==='warn'?'sel-warn':''}" onclick="setEs('warn')">⚠️ Monitorare</button>
+    <button class="es-btn ${tEsito==='fix' ?'sel-fix':''}"  onclick="setEs('fix')">🔧 Riparare</button>
+    <button class="es-btn ${tEsito==='urg' ?'sel-urg':''}"  onclick="setEs('urg')">🚨 Urgente</button>
+  </div>`;
+  document.getElementById('m-body').innerHTML = h;
+}
+
+function tglChk(el, item, ks) {
+  tChk[item] = el.checked;
+  const lbl = document.getElementById('lbl_' + ks);
+  if (lbl) lbl.className = 'chk-item ' + (el.checked ? 'ck' : '');
+  let tot=0, done=0;
+  CL.forEach(s => s.it.forEach(i => { tot++; if(tChk[i]) done++; }));
+  const pct = tot ? Math.round(done/tot*100) : 0;
+  const pb = document.getElementById('pbar');
+  if (pb) pb.style.width = pct + '%';
+  const sp = document.querySelector('.occ-row span:last-child');
+  if (sp) sp.textContent = done+'/'+tot+' ('+pct+'%)';
+}
+
+function addProb() { tProb.push({prio:'fix',desc:''}); renderMBody(); }
+function rmProb(i) { tProb.splice(i,1); renderMBody(); }
+function setEs(v) { tEsito = v; renderMBody(); }
+
+async function saveRoom() {
+  if (!tEsito) { alert('Seleziona un esito generale.'); return; }
+  const data = {
+    checked: tChk,
+    problems: tProb.filter(p => p.desc.trim()),
+    esito: tEsito,
+    status: tEsito,
+    occupied: tOcc,
+    manut: tMan,
+    date: today()
+  };
+  await writeRoom(cur, data);
+
+  // Registro: check ordinario (uno al giorno per camera)
+  const existCheck = registro.find(r => r.tipo==='check' && r.room===cur && r.date===today());
+  if (!existCheck) {
+    await writeRegistro({ tipo:'check', room:cur, date:today(), esito:tEsito, manut:tMan, occupied:tOcc, desc:'Controllo ordinario programmato', prio:tEsito, solved:null, solvedDate:null, extra:false });
+  } else {
+    await updateRegistroDoc(existCheck.id, { esito:tEsito, manut:tMan, occupied:tOcc, prio:tEsito });
+  }
+
+  // Registro: problemi
+  const cleanProbs = tProb.filter(p => p.desc.trim());
+  for (const p of cleanProbs) {
+    const exists = registro.find(r => r.tipo==='prob' && r.room===cur && r.date===today() && r.desc===p.desc && !r.extra);
+    if (!exists) {
+      await writeRegistro({ tipo:'prob', room:cur, date:today(), prio:p.prio, desc:p.desc, solved:false, solvedDate:null, manut:tMan, extra:false });
+    }
+  }
+
+  closeModal();
+}
+
+function resetRoom() {
+  if (!confirm('Azzerare tutti i dati di questa camera?')) return;
+  tChk={}; tProb=[]; tEsito=null; tOcc=false; tMan='';
+  renderMBody();
+}
+
+function closeModal() {
+  document.getElementById('overlay').classList.add('hid');
+  cur = null;
+}
+
+document.getElementById('overlay').addEventListener('click', function(e) { if(e.target===this) closeModal(); });
+
+// ── REGISTRO ─────────────────────────────────────────────────────
+function renderReg() {
+  const ft = document.getElementById('fil-type').value;
+  const fr = document.getElementById('fil-room').value;
+  const fs = document.getElementById('fil-stato').value;
+  const fq = document.getElementById('fil-search').value.toLowerCase();
+
+  let rows = registro.filter(r => {
+    if (ft && r.tipo !== ft) return false;
+    if (fr && r.room !== fr) return false;
+    if (fs === 'open' && r.tipo === 'prob' && r.solved) return false;
+    if (fs === 'open' && r.tipo === 'check') return false;
+    if (fs === 'solved' && r.tipo === 'prob' && !r.solved) return false;
+    if (fs === 'solved' && r.tipo === 'check') return false;
+    if (fq && !(r.room.toLowerCase().includes(fq) || (r.desc||'').toLowerCase().includes(fq) || (r.manut||'').toLowerCase().includes(fq))) return false;
+    return true;
+  });
+
+  rows = rows.slice().reverse();
+  document.getElementById('reg-count').textContent = rows.length + ' record';
+
+  const tbody = document.getElementById('reg-tbody');
+  const empty = document.getElementById('reg-empty');
+
+  if (!rows.length) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  tbody.innerHTML = rows.map(r => {
+    const rowCls = r.tipo === 'check' ? 'row-check' : r.solved ? 'row-solved' : 'row-' + (r.prio || 'fix');
+    const tipoBadge = r.tipo === 'check'
+      ? `<span class="badge badge-check">Controllo ordinario</span>`
+      : `<span class="badge badge-${r.prio || 'fix'}">${prioLabel(r.prio)}</span>${r.extra ? ' <span style="font-size:10px;color:var(--text3)">straord.</span>' : ''}`;
+    const esitoBadge = r.tipo === 'check'
+      ? `<span class="badge badge-${r.esito||'ok'}">${{ok:'✅ OK',warn:'⚠️ Monit.',fix:'🔧 Riparare',urg:'🚨 Urgente'}[r.esito]||'—'}</span>`
+      : r.solved
+        ? `<span class="badge badge-solved">✅ Risolto</span>`
+        : `<span class="badge badge-open">⏳ Aperto</span>`;
+    const solveBtn = r.tipo === 'prob'
+      ? r.solved
+        ? `<button class="solve-btn solved-st" onclick="markSolved('${r.id}', false)">Riapri</button>`
+        : `<button class="solve-btn" onclick="markSolved('${r.id}', true)">Segna risolto</button>`
+      : '';
+
+    return `<tr class="${rowCls}">
+      <td><strong>${esc(r.room)}</strong></td>
+      <td style="font-size:11px;">${esc(r.date||'')}</td>
+      <td>
+        ${tipoBadge}<br>
+        <span style="font-size:11px;color:var(--text2);">${esc(r.desc||'')}</span>
+        ${r.manut ? '<br><span style="font-size:10px;color:var(--text3);">👤 '+esc(r.manut)+'</span>' : ''}
+      </td>
+      <td>${esitoBadge}</td>
+      <td>${esitoBadge !== '' && r.tipo==='check' ? '' : r.tipo==='prob' ? (r.solved ? '<span class="badge badge-solved">✅ Risolto</span>' : '<span class="badge badge-open">⏳ Aperto</span>') : ''}</td>
+      <td style="font-size:11px;">${r.solved && r.solvedDate ? esc(r.solvedDate) : '—'}</td>
+      <td>${solveBtn}</td>
+    </tr>`;
+  }).join('');
+}
+
+async function markSolved(id, solved) {
+  const data = solved
+    ? { solved: true, solvedDate: today() }
+    : { solved: false, solvedDate: null };
+  await updateRegistroDoc(id, data);
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────
+function today() {
+  return new Date().toLocaleDateString('it-IT');
+}
+function prioLabel(p) {
+  return p==='urg'?'🚨 Urgente':p==='fix'?'🔧 Da riparare':'⚠️ Da monitorare';
+}
+function esc(s) {
+  if (s === null || s === undefined) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── INIT ──────────────────────────────────────────────────────────
+document.getElementById('hdr-date').textContent = new Date().toLocaleDateString('it-IT', {weekday:'long',day:'numeric',month:'long',year:'numeric'});
+initListeners();
+</script>
+</body>
+</html>
