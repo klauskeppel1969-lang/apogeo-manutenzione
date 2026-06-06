@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manutenzione — Hotel Apogeo</title>
+  
+  <meta name="theme-color" content="#1a1a14">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Apogeo Manutenzione">
+  <link rel="manifest" id="pwa-manifest">
+  <link rel="icon" type="image/png" sizes="32x32" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAABbUlEQVR4nN2X0Y3DMAiGiUewlQluiO7QTbJGlsgmt0NfukEmqOwR0j6cqDgHMDi9U1WkSFVi+D9jG9MBnBZjvGvfSymDJ17wArzaVAButtoMuW+tjIkA6NgKoJklBjub2qGUMnhBOB8uQ+6UAQDknNn3KSUTmAjQEpeEvSAU4vlDE6+FL+PIjjvdbmYQhGguARWXhDWQGqJegt0poAO84udt242lMbhNuAPgloIGPG/b8+HEOQgttlgHkFyb+XWe1+s8rxIM+mqbN7R2fr2xLPYdbBU+xnhnC4xEfBnHX6nPOe82GRW3nAoXgBQEfZZlWQEApmn6svq+BOBIgXrv69hqljvgTwBo6lNKXSAB4KdC4YPBeiA0X3xfawVvD2cx6wRKKYO4BEeyYM0KQKMjsh4vKsT50PQ3AbTruMda13FXQ9IrzoG8T0tmhdBADjelEsS/tuUcRO0owWjjpHoj1gF0OFKoLDHcwT/u3/EDLPIE4MvDZm4AAAAASUVORK5CYII=">
+  <link rel="apple-touch-icon" href="data:image/png;base64,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">
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+  <style>
+    :root {
+      --bg: #f4f1eb; 
+      --surf: #fff; 
+      --surf2: #eeebe3; 
+      --brd: rgba(0,0,0,.10);
+      --brd2: rgba(0,0,0,.18); 
+      --txt: #1a1a18; 
+      --txt2: #6b6860; 
+      --txt3: #9a9890;
+      --gold: #d4a017; 
+      --radius: 10px; 
+      --rlg: 14px;
+      
+      /* Priority Alert Colors */
+      --color-urg: #b71c1c;
+      --color-alta: #e65100;
+      --color-media: #f57c00;
+      --color-bassa: #f9a825;  /* Giallo per manutenzione programmata */
+      --color-ok: #2e7d32;
+    }
+
+    @media(prefers-color-scheme: dark) {
+      :root { 
+        --bg: #1a1917; 
+        --surf: #242320; 
+        --surf2: #2e2c28;
+        --brd: rgba(255,255,255,.10); 
+        --brd2: rgba(255,255,255,.18);
+        --txt: #f0ead6; 
+        --txt2: #a0998c; 
+        --txt3: #6b6560; 
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, 'Segoe UI', sans-serif; background: var(--bg); color: var(--txt); font-size: 14px; min-height: 100vh; }
+
+    .topbar { background: #1a1a14; color: #f0ead6; padding: 0 18px; display: flex; align-items: center; gap: 10px; height: 52px; position: sticky; top: 0; z-index: 50; box-shadow: 0 1px 0 rgba(255,255,255,.06); }
+    .logo { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; }
+    .logo img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+    .topbar-title { font-size: 15px; font-weight: 500; flex: 1; line-height: 1.2; }
+    .topbar-sub { font-size: 10px; color: #888; }
+    .nav-tabs { display: flex; gap: 3px; }
+    .nav-tab { padding: 5px 14px; border-radius: 8px; font-size: 12px; font-weight: 500; cursor: pointer; border: 1.5px solid transparent; background: transparent; color: #888; transition: all .15s; }
+    .nav-tab.active { background: var(--gold); color: #1a1a14; border-color: var(--gold); }
+    .nav-tab:hover:not(.active) { color: #f0ead6; border-color: #444; }
+    .sync-pill { font-size: 11px; color: #666; display: flex; align-items: center; gap: 5px; white-space: nowrap; }
+    .sdot { width: 7px; height: 7px; border-radius: 50%; background: #4caf50; flex-shrink: 0; }
+    .sdot.sy { background: var(--gold); animation: pulse 1s infinite; }
+    .sdot.er { background: #f44336; }
+    @keyframes pulse { 0%, 100% { opacity: 1 } 50% { opacity: .3 } }
+
+    .content { max-width: 1200px; margin: 0 auto; padding: 14px; }
+    .page { display: none; } 
+    .page.active { display: block; }
+
+    .stats-bar { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+    .sp { display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 500; border: .5px solid var(--brd); background: var(--surf); color: var(--txt2); }
+    .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .dok { background: var(--color-ok); }
+    .durg { background: var(--color-urg); }
+    .dalta { background: var(--color-alta); }
+    .dmedia { background: var(--color-media); }
+    .dbassa { background: var(--color-bassa); }
+    .dunc { background: #bbb; }
+    .snum { font-weight: 700; color: var(--txt); margin-left: 2px; }
+
+    .main-layout { display: flex; gap: 14px; align-items: flex-start; }
+    .floor-col { flex: 1; min-width: 0; }
+    .side-col { width: 280px; flex-shrink: 0; }
+    @media(max-width: 768px) { .main-layout { flex-direction: column; } .side-col { width: 100%; } }
+    .floor-lbl { font-size: 11px; font-weight: 600; color: var(--txt3); text-transform: uppercase; letter-spacing: .08em; margin: 0 0 8px 2px; }
+    
+    .rooms-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)); gap: 9px; margin-bottom: 20px; }
+    .rbtn {
+      aspect-ratio: 1; border-radius: 12px; border: 2px solid var(--brd2);
+      font-weight: 700; cursor: pointer; display: flex; flex-direction: column; 
+      align-items: center; justify-content: center; gap: 4px;
+      background: var(--surf2); color: var(--txt); transition: transform .1s, box-shadow .1s;
+      padding: 6px; position: relative;
+    }
+    .rbtn:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 2; }
+    
+    .rbtn.status-ok { background: #e8f5e9; border-color: var(--color-ok); color: #1b5e20; }
+    .rbtn.status-bassa { background: #fff8e1; border-color: var(--color-bassa); color: #f57f17; }  /* Giallo per bassa priorità */
+    .rbtn.status-media { background: #fff3e0; border-color: var(--color-media); color: #e65100; }
+    .rbtn.status-alta { background: #fbe9e7; border-color: var(--color-alta); color: #d84315; }
+    .rbtn.status-urg { background: #ffebee; border-color: var(--color-urg); color: #b71c1c; font-weight: 900; animation: flash-border 2s infinite; }
+    
+    @keyframes flash-border { 0%, 100% { border-color: var(--color-urg); } 50% { border-color: #ff8a80; } }
+
+    .rbtn .rn { font-size: 16px; }
+    .rbtn .ri { font-size: 14px; }
+    .rbtn .v-badge { position: absolute; top: 2px; right: 2px; font-size: 9px; }
+
+    .card { background: var(--surf); border: .5px solid var(--brd); border-radius: var(--rlg); margin-bottom: 12px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    .card-hdr { padding: 11px 14px; font-size: 12px; font-weight: 600; color: var(--txt); border-bottom: .5px solid var(--brd); background: var(--surf2); display: flex; align-items: center; justify-content: space-between; }
+    .card-body { padding: 12px 14px; }
+    .rlist { max-height: 280px; overflow-y: auto; }
+    
+    .prob-item { font-size: 11px; padding: 8px 10px; margin-bottom: 6px; border-radius: 8px; background: var(--surf2); border-left: 4px solid #ccc; color: var(--txt); position: relative; }
+    .prob-item.prio-urg { border-left-color: var(--color-urg); background: #ffebee; }
+    .prob-item.prio-alta { border-left-color: var(--color-alta); }
+    .prob-item.prio-media { border-left-color: var(--color-media); }
+    .prob-item.prio-bassa { border-left-color: var(--color-bassa); }
+    .prob-meta { font-size: 10px; color: var(--txt2); margin-top: 4px; display: flex; justify-content: space-between; align-items: center; }
+    .ri-none { font-size: 11px; color: var(--txt3); font-style: italic; text-align: center; padding: 10px 0; }
+
+    select, input[type=text], textarea { width: 100%; font-size: 12px; border-radius: 8px; padding: 7px 10px; border: .5px solid var(--brd2); background: var(--surf2); color: var(--txt); font-family: inherit; margin-bottom: 8px; display: block; }
+    textarea { resize: vertical; min-height: 60px; }
+    
+    .btn-block { width: 100%; padding: 9px; border-radius: 8px; background: #1a1a14; color: #f0ead6; border: none; font-size: 12px; font-weight: 500; cursor: pointer; transition: background .15s; text-align: center; }
+    .btn-block:hover { background: #333; }
+    .btn-verify { background: var(--color-bassa); color: #fff; margin-bottom: 12px; }
+    .btn-verify:hover { background: #f57f17; }
+    .btn-sm { font-size: 11px; padding: 3px 8px; border-radius: 6px; border: .5px solid var(--brd2); background: var(--surf); cursor: pointer; color: var(--txt2); transition: all 0.1s; }
+    .btn-sm:hover { background: var(--surf2); color: var(--txt); }
+    .btn-solve { background: var(--color-ok); color: white; border: none; font-weight: 500; }
+    .btn-solve:hover { background: #1b5e20; }
+    .btn-delete { background: #c62828; color: white; border: none; }
+    .btn-delete:hover { background: #b71c1c; }
+    .btn-report { background: #1565c0; color: white; border: none; }
+    .btn-report:hover { background: #0d47a1; }
+
+    .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 14px; }
+    .overlay.hid { display: none; }
+    .modal { background: var(--surf); border-radius: var(--rlg); border: .5px solid var(--brd); width: 100%; max-width: 480px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); overflow: hidden; }
+    .mhdr { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; background: #1a1a14; color: #f0ead6; }
+    .mhdr h2 { font-size: 15px; font-weight: 500; }
+    .mbtn-x { background: none; border: none; color: #f0ead6; font-size: 24px; cursor: pointer; line-height: 1; }
+    .mbody { padding: 16px 18px; }
+    .mfooter { padding: 12px 18px; border-top: .5px solid var(--brd); display: flex; gap: 8px; justify-content: flex-end; background: var(--surf2); }
+
+    .prio-matrix { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 12px; }
+    .prio-btn { padding: 8px; border-radius: 8px; border: 1.5px solid var(--brd2); font-size: 11px; font-weight: 600; text-align: center; cursor: pointer; background: var(--surf); color: var(--txt2); transition: all .15s; }
+    .prio-btn.active[data-prio="urg"] { background: #ffebee; border-color: var(--color-urg); color: var(--color-urg); }
+    .prio-btn.active[data-prio="alta"] { background: #fbe9e7; border-color: var(--color-alta); color: var(--color-alta); }
+    .prio-btn.active[data-prio="media"] { background: #fff3e0; border-color: var(--color-media); color: var(--color-media); }
+    .prio-btn.active[data-prio="bassa"] { background: #fff8e1; border-color: var(--color-bassa); color: #f57f17; }
+
+    .reg-toolbar { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; align-items: center; background: var(--surf); padding: 10px; border-radius: var(--radius); border: .5px solid var(--brd); }
+    .reg-toolbar select { width: auto; margin: 0; min-width: 140px; }
+    .reg-toolbar input { flex: 1; min-width: 160px; margin: 0; }
+    .reg-count { font-size: 12px; font-weight: 500; color: var(--txt2); margin-left: auto; }
+    .table-wrap { overflow-x: auto; background: var(--surf); border-radius: var(--radius); border: .5px solid var(--brd); }
+    .reg-table { width: 100%; border-collapse: collapse; font-size: 12px; text-align: left; }
+    .reg-table th { padding: 10px 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--txt3); border-bottom: .5px solid var(--brd); background: var(--surf2); }
+    .reg-table td { padding: 10px 12px; border-bottom: .5px solid var(--brd); vertical-align: middle; color: var(--txt); }
+    .reg-table tr:hover td { background: var(--surf2); }
+    
+    .reg-table tr.type-verify { border-left: 4px solid var(--color-bassa); }
+    .reg-table tr.status-open { border-left: 4px solid var(--color-urg); }
+    .reg-table tr.status-solved { border-left: 4px solid var(--color-ok); opacity: 0.7; }
+
+    .badge { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 12px; text-transform: uppercase; }
+    .badge.b-open { background: #ffebee; color: var(--color-urg); }
+    .badge.b-solved { background: #e8f5e9; color: var(--color-ok); }
+    .badge.b-verify { background: #fff8e1; color: #f57f17; }
+
+    .loader { text-align: center; padding: 40px; color: var(--txt3); }
+    .spinner { width: 28px; height: 28px; border: 3px solid var(--brd); border-top-color: var(--gold); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 12px; }
+    @keyframes spin { to { transform: rotate(360deg) } }
+    
+    .pin-input-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.7); z-index: 300; display: flex; align-items: center; justify-content: center; }
+    .pin-input-modal { background: var(--surf); border-radius: var(--rlg); padding: 20px; width: 300px; text-align: center; }
+    .pin-input-modal input { text-align: center; font-size: 20px; letter-spacing: 8px; margin: 15px 0; }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="logo"><img src="https://klauskeppel1969-lang.github.io/camere-apogeo/icon-192.png" alt="Logo Apogeo" onerror="this.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAYAAABS3GwHAAAYQUlEQVR4nO2dW4wUVf7Hv6cuM9POMEDPAAtrfHDBR5bEeJlkedElBhoZgheMb0ZJNOxgSOCFSGaGNSaricZhkQc0Pmi88PBHiAMxLMTImkGfiA+aLOiDF5S51MDMNHOpy/k/VJ2enqYvVd11Oaf6fJIOSTNdVed3vt9zP6cAiUQikTQnJOkHSAPZbJYmcV/DMGT+NYiS9ANIJEkiDSBpaqQBQiCJpohs/oSDNICkqZEGkDQ10gCSpkYaQNLUSANImhppgJCIc1RGjgCFR+oMkNSsbDOQxtimygBpzCDeSFuMU2GAbDZLizMmbZnEA6XxTUuMhTdAWjJCRNIQe6ENUC0DksicODqnSXSAeYtzmGhJP0A9iB70tMHyQ8TRKeFqgCDil0ZpnLTHWygDiBjgZkO0PBLCAI2MOoiWITzRSMxFiTv3BhAlkJI7ESHvuO20hB28ODtoUWW8yGngtYPMZQ0gQskhCQavecqdK6MMVFSlUNpOhRAxD+qFm4eJQ0RhBZ/X0kyk9PFiBC4eIk5B1Rt4XkVfCRHSyYMJEn+AuIUVJOiiib4SPKc5aRMkdvMkxVUt6GkRfSV4TXtSRkhkFIhHkYk0edMIvKYzqWdqyhoAWCxxkn6OpOElDknVAIm2v5IOuoQPkuwHJDoRlnQHSJI8SWsg8ZngpAMgSQ4e8j5xAwB8BEISL7zkORcGAPgJiCR6eMprbgwA8BUYSTTwlsdcPUwxcoQoXfAmfAZXNUAxvAZMEhye85JbAwB8B07iD97zkGsDAPwHUFIZEfKOewMAYgRSshRR8kyIh2SI2jEWYW1+mIgifkAwAwB8iyKujJcxCA8hj0bkCT8ZTimtS7CEkLLXLr4nz2YQAaHcyktmVxN9vWL3SyVTAG'">/></div>
+    <div class="topbar-title">Camere Apogeo<div class="topbar-sub" id="hdr-date"></div></div>
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="switchPage('griglia')" id="tab-griglia">Pannello Camere</button>
+      <button class="nav-tab" onclick="switchPage('registro')" id="tab-registro">Registro Storico</button>
+    </div>
+    <div class="sync-pill"><div class="sdot" id="sdot"></div><span id="slbl">Connesso</span></div>
+    <button id="install-btn" onclick="installApp()" style="display:none; margin-left: 10px;" class="btn-sm">⬇ Installa</button>
+  </div>
+
+  <div class="content">
+
+    <div class="page active" id="page-griglia">
+      <div id="loader-g" class="loader"><div class="spinner"></div>Inizializzazione Configurazione...</div>
+      
+      <div id="griglia-cnt" style="display:none">
+        <div class="stats-bar">
+          <div class="sp"><span class="dot dunc"></span>Non Verificate <span class="snum" id="s-unc">0</span></div>
+          <div class="sp"><span class="dot dok"></span>Nessun Problema <span class="snum" id="s-ok">0</span></div>
+          <div class="sp"><span class="dot dbassa"></span>Manutenzione Programmata <span class="snum" id="s-bassa">0</span></div>
+          <div class="sp"><span class="dot dmedia"></span>Media <span class="snum" id="s-media">0</span></div>
+          <div class="sp"><span class="dot dalta"></span>Alta <span class="snum" id="s-alta">0</span></div>
+          <div class="sp"><span class="dot durg"></span>Urgente <span class="snum" id="s-urg">0</span></div>
+        </div>
+
+        <div class="main-layout">
+          <div class="floor-col">
+            <div class="floor-lbl">Primo Piano</div>
+            <div class="rooms-grid" id="grid-p1"></div>
+            
+            <div class="floor-lbl">Piano Terra</div>
+            <div class="rooms-grid" id="grid-p0"></div>
+          </div>
+          
+          <div class="side-col">
+            <div class="card">
+              <div class="card-hdr">⚠️ Guasti Attivi Rilevati</div>
+              <div class="card-body">
+                <div class="rlist" id="prob-list">
+                  <div class="ri-none">Nessuna anomalia attiva nei moduli</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page" id="page-registro">
+      <div class="reg-toolbar">
+        <select id="fil-type" onchange="renderRegistryArchs()">
+          <option value="">Tutti i flussi</option>
+          <option value="check">Verifiche Periodiche</option>
+          <option value="prob">Guasti & Anomalie</option>
+        </select>
+        <select id="fil-room" onchange="renderRegistryArchs()"><option value="">Tutte le stanze</option></select>
+        <select id="fil-status" onchange="renderRegistryArchs()">
+          <option value="">Tutti gli stati</option>
+          <option value="open">Aperto</option>
+          <option value="solved">Risolto</option>
+        </select>
+        <input type="text" id="fil-q" placeholder="Filtro di ricerca intelligente..." oninput="renderRegistryArchs()">
+        <button class="btn-sm btn-report" onclick="printOpenReports()">🖨️ Stampa Report Non Risolti</button>
+        <span class="reg-count" id="reg-count">0 record caricati</span>
+      </div>
+
+      <div id="loader-r" class="loader"><div class="spinner"></div>Sincronizzazione Registro Storico...</div>
+      
+      <div id="reg-cnt" style="display:none">
+        <div class="table-wrap">
+          <table class="reg-table">
+            <thead>
+              <tr>
+                <th style="width:70px">Stanza</th>
+                <th style="width:110px">Data/Ora</th>
+                <th>Tipologia / Dettagli Segnalazione</th>
+                <th style="width:110px">Livello Prio</th>
+                <th style="width:90px">Stato</th>
+                <th style="width:120px">Data Risoluzione</th>
+                <th style="width:130px">Azioni</th>
+              </tr>
+            </thead>
+            <tbody id="reg-tbody"></tbody>
+          </table>
+        </div>
+        <div class="ri-none" id="reg-empty" style="display:none; padding: 40px;">Nessun record corrispondente ai filtri impostati.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay hid" id="overlay" role="dialog" aria-hidden="true">
+    <div class="modal">
+      <div class="mhdr">
+        <div>
+          <h2 id="m-title">Stanza --</h2>
+          <div class="topbar-sub" id="m-meta">Configurazione Attuale Stato</div>
+        </div>
+        <button class="mbtn-x" onclick="closeModalWindow()">&times;</button>
+      </div>
+      <div class="mbody">
+        
+        <button class="btn-block btn-verify" onclick="triggerPeriodicVerification()">
+          ✓ Segna come Verifica Periodica Completata
+        </button>
+        
+        <div class="sec-lbl" style="font-size:11px; font-weight:600; text-transform:uppercase; color:var(--txt3); margin: 10px 0 6px;">
+          Segnalazione Guasto / Manutenzione
+        </div>
+        
+        <textarea id="m-notes" placeholder="Descrivi qui l'anomalia o il componente guasto... Se vuoto, la camera risulterà OK senza anomalie."></textarea>
+        
+        <div style="font-size:11px; margin-bottom:6px; color:var(--txt2);">Livello di Priorità dell'Intervento:</div>
+        <div class="prio-matrix">
+          <button class="prio-btn" data-prio="bassa" onclick="setModalPriorityLevel('bassa')">📅 Manutenzione Programmata</button>
+          <button class="prio-btn" data-prio="media" onclick="setModalPriorityLevel('media')">⚠️ Media</button>
+          <button class="prio-btn" data-prio="alta" onclick="setModalPriorityLevel('alta')">🔧 Alta</button>
+          <button class="prio-btn" data-prio="urg" onclick="setModalPriorityLevel('urg')">🚨 Urgente</button>
+        </div>
+
+        <input type="text" id="m-staff" placeholder="Operatore / Manutentore incaricato">
+      </div>
+      <div class="mfooter">
+        <button class="btn-sm" style="background:none;" onclick="closeModalWindow()">Annulla</button>
+        <button class="btn-save btn-block" style="width:auto; padding: 8px 24px;" onclick="commitRoomStateStorage()">Salva Stato Camera</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyDmyAFnQHzlhU6Jp6XurWZ4g3MB81TtB_w",
+      authDomain: "apogeo-manutenzione.firebaseapp.com",
+      projectId: "apogeo-manutenzione",
+      storageBucket: "apogeo-manutenzione.firebasestorage.app",
+      messagingSenderId: "183299664105",
+      appId: "1:183299664105:web:fff32632425e8a0b9de878"
+    };
+    
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const P1 = ['130','14','15','16','18','20','21','22','23','24','25','26','28a','28b','29','30','31','32','33','34'];
+    const P0 = ['35','36','37','38','39','40','41a','41b','42','43','44','45','46','47','48'];
+    const ALL_ROOMS = [...P1, ...P0];
+
+    const PRIORITY_MAP = {
+      urg: { label: 'Urgente', icon: '🚨' },
+      alta: { label: 'Alta', icon: '🔧' },
+      media: { label: 'Media', icon: '⚠️' },
+      bassa: { label: 'Manutenzione Programmata', icon: '📅' }
+    };
+
+    let roomsMemoryMap = {};
+    let globalRegistryLogs = [];
+    let activeSelectedRoomId = null;
+    let temporarySelectedPriority = 'bassa';
+
+    ALL_ROOMS.forEach(rmId => {
+      roomsMemoryMap[rmId] = {
+        status: 'unc',
+        notes: '',
+        priority: 'bassa',
+        staff: '',
+        lastVerificationDate: null,
+        timestamp: null
+      };
+    });
+
+    function setNetworkSyncStatus(statusState) {
+      const dotEl = document.getElementById('sdot');
+      const labelEl = document.getElementById('slbl');
+      if (!dotEl || !labelEl) return;
+      
+      if (statusState === 'sy') {
+        dotEl.className = 'sdot sy'; labelEl.textContent = 'Sincronizzazione in corso...';
+      } else if (statusState === 'er') {
+        dotEl.className = 'sdot er'; labelEl.textContent = 'Errore di connessione';
+      } else {
+        dotEl.className = 'sdot'; labelEl.textContent = 'Dati Sincronizzati';
+      }
+    }
+
+    function initializeDatabasePipeline() {
+      db.collection('rooms_v2').onSnapshot(snapshot => {
+        snapshot.forEach(doc => {
+          if (roomsMemoryMap[doc.id] !== undefined) {
+            roomsMemoryMap[doc.id] = { ...roomsMemoryMap[doc.id], ...doc.data() };
+          }
+        });
+        refreshRoomGridMatrixUI();
+        recalculateRealtimeAppStatistics();
+        renderActiveDashboardAnomalies();
+        
+        document.getElementById('loader-g').style.display = 'none';
+        document.getElementById('griglia-cnt').style.display = 'block';
+      }, () => setNetworkSyncStatus('er'));
+
+      db.collection('registro_v2').orderBy('ts', 'asc').onSnapshot(snapshot => {
+        globalRegistryLogs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderActiveDashboardAnomalies();
+        
+        document.getElementById('loader-r').style.display = 'none';
+        document.getElementById('reg-cnt').style.display = 'block';
+        if (document.getElementById('page-registro').classList.contains('active')) {
+          renderRegistryArchs();
+        }
+      }, () => setNetworkSyncStatus('er'));
+    }
+
+    async function executeRoomStateUpdate(roomId, payload) {
+      setNetworkSyncStatus('sy');
+      try {
+        await db.collection('rooms_v2').doc(roomId).set(payload, { merge: true });
+        setNetworkSyncStatus('ok');
+      } catch (err) {
+        setNetworkSyncStatus('er');
+        console.error("Storage save transaction failed:", err);
+      }
+    }
+
+    async function pushRegistryAuditTrail(payload) {
+      setNetworkSyncStatus('sy');
+      try {
+        await db.collection('registro_v2').add({
+          ...payload,
+          ts: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        setNetworkSyncStatus('ok');
+      } catch (err) {
+        setNetworkSyncStatus('er');
+      }
+    }
+
+    async function patchRegistryLogState(logId, updatedFields) {
+      setNetworkSyncStatus('sy');
+      try {
+        await db.collection('registro_v2').doc(logId).update(updatedFields);
+        setNetworkSyncStatus('ok');
+      } catch (err) {
+        setNetworkSyncStatus('er');
+      }
+    }
+    
+    async function deleteRegistryLogEntry(logId, roomId) {
+      setNetworkSyncStatus('sy');
+      try {
+        await db.collection('registro_v2').doc(logId).delete();
+        setNetworkSyncStatus('ok');
+      } catch (err) {
+        setNetworkSyncStatus('er');
+      }
+    }
+
+    function getDynamicPin() {
+      const today = new Date();
+      const month = today.getMonth() + 1;
+      const day = today.getDate();
+      return (month + day).toString();
+    }
+
+    function showPinDialog(callback) {
+      const pin = getDynamicPin();
+      const overlay = document.createElement('div');
+      overlay.className = 'pin-input-overlay';
+      overlay.innerHTML = `
+        <div class="pin-input-modal">
+          <h3>🔐 Inserisci PIN di Cancellazione</h3>
+          <input type="password" id="pin-input" placeholder="PIN" maxlength="3" style="text-align:center; font-size:20px; letter-spacing:5px;">
+          <div style="display:flex; gap:8px; margin-top:15px;">
+            <button class="btn-sm" onclick="this.closest('.pin-input-overlay').remove()">Annulla</button>
+            <button class="btn-sm btn-delete" id="pin-confirm">Conferma</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+      
+      document.getElementById('pin-confirm').onclick = () => {
+        const inputPin = document.getElementById('pin-input').value;
+        if (inputPin === pin) {
+          overlay.remove();
+          callback(true);
+        } else {
+          alert(`PIN errato! Il PIN per oggi è: ${pin}`);
+          callback(false);
+        }
+      };
+    }
+
+    function switchPage(targetPageId) {
+      document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById('page-' + targetPageId).classList.add('active');
+      document.getElementById('tab-' + targetPageId).classList.add('active');
+      
+      if (targetPageId === 'registro') {
+        renderRegistryArchs();
+      }
+    }
+
+    function refreshRoomGridMatrixUI() {
+      populateSingleFloorLayout(P1, 'grid-p1');
+      populateSingleFloorLayout(P0, 'grid-p0');
+      
+      const filRoomSelect = document.getElementById('fil-room');
+      if (filRoomSelect && filRoomSelect.options.length <= 1) {
+        ALL_ROOMS.forEach(rm => {
+          let opt = document.createElement('option');
+          opt.value = rm; opt.textContent = 'Stanza ' + rm;
+          filRoomSelect.appendChild(opt);
+        });
+      }
+    }
+
+    function populateSingleFloorLayout(roomDataset, domContainerId) {
+      const rootContainer = document.getElementById(domContainerId);
+      if (!rootContainer) return;
+      rootContainer.innerHTML = '';
+
+      roomDataset.forEach(rmId => {
+        const item = roomsMemoryMap[rmId];
+        const btn = document.createElement('button');
+        
+        let statusClass = 'status-unc';
+        if (item.status === 'ok') statusClass = 'status-ok';
+        else if (item.status && PRIORITY_MAP[item.status]) {
+          statusClass = 'status-' + item.status;
+        }
+
+        btn.className = `rbtn ${statusClass}`;
+        btn.setAttribute('aria-label', `Stanza ${rmId}`);
+        
+        let subIndicatorIcon = '';
+        if (item.status && PRIORITY_MAP[item.status]) {
+          subIndicatorIcon = PRIORITY_MAP[item.status].icon;
+        } else if (item.status === 'ok') {
+          subIndicatorIcon = '✅';
+        }
+
+        let verifiedBadge = item.lastVerificationDate ? `<span class="v-badge" title="Verificata il ${item.lastVerificationDate}">⭐</span>` : '';
+
+        btn.innerHTML = `
+          <span class="rn">${rmId}</span>
+          <span class="ri">${subIndicatorIcon}</span>
+          ${verifiedBadge}
+        `;
+        
+        btn.onclick = () => launchControlRoomModal(rmId);
+        rootContainer.appendChild(btn);
+      });
+    }
+
+    function recalculateRealtimeAppStatistics() {
+      let stats = { unc: 0, ok: 0, urg: 0, alta: 0, media: 0, bassa: 0 };
+      ALL_ROOMS.forEach(rmId => {
+        const currentStatus = roomsMemoryMap[rmId].status;
+        if (stats[currentStatus] !== undefined) {
+          stats[currentStatus]++;
+        } else {
+          stats.unc++;
+        }
+      });
+
+      Object.keys(stats).forEach(key => {
+        const domTarget = document.getElementById('s-' + key);
+        if (domTarget) domTarget.textContent = stats[key];
+      });
+    }
+
+    function renderActiveDashboardAnomalies() {
+      const container = document.getElementById('prob-list');
+      if (!container) return;
+
+      const criticalActiveLeaks = globalRegistryLogs.filter(log => log.type === 'prob' && log.resolved === false);
+
+      if (criticalActiveLeaks.length === 0) {
+        container.innerHTML = '<div class="ri-none">Nessun guasto attivo nei moduli</div>';
+        return;
+      }
+
+      container.innerHTML = criticalActiveLeaks.slice().reverse().map(leak => {
+        const priorityMeta = PRIORITY_MAP[leak.priority] || { label: 'Ordinaria', icon: '🔧' };
+        return `
+          <div class="prob-item prio-${leak.priority}">
+            <strong>Stanza ${escapeHtmlInjection(leak.room)}</strong>: ${escapeHtmlInjection(leak.desc)}
+            <div class="prob-meta">
+              <span>${priorityMeta.icon} ${priorityMeta.label}</span>
+              <button class="btn-sm btn-solve" onclick="directResolveLeakIncident('${leak.id}', '${leak.room}')">Segna Risolto</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function launchControlRoomModal(roomId) {
+      activeSelectedRoomId = roomId;
+      const cachedRef = roomsMemoryMap[roomId];
+
+      document.getElementById('m-title').textContent = 'Stanza ' + roomId;
+      
+      let descriptionSubText = 'Stato: Non Verificata';
+      if (cachedRef.status === 'ok') descriptionSubText = 'Stato: Regolare (Nessun Problema)';
+      else if (PRIORITY_MAP[cachedRef.status]) descriptionSubText = 'Stato con Anomalia: ' + PRIORITY_MAP[cachedRef.status].label;
+
+      if (cachedRef.lastVerificationDate) {
+        descriptionSubText += ` (Ultima Verifica Periodica: ${cachedRef.lastVerificationDate})`;
+      }
+
+      document.getElementById('m-meta').textContent = descriptionSubText;
+      document.getElementById('m-notes').value = cachedRef.notes || '';
+      document.getElementById('m-staff').value = cachedRef.staff || '';
+
+      setModalPriorityLevel(cachedRef.priority || 'bassa');
+
+      document.getElementById('overlay').classList.remove('hid');
+    }
+
+    function setModalPriorityLevel(targetPriorityLevel) {
+      temporarySelectedPriority = targetPriorityLevel;
+      document.querySelectorAll('.prio-btn').forEach(btn => {
+        const btnPrio = btn.getAttribute('onclick')?.match(/'(\w+)'/)?.[1];
+        if (btnPrio === targetPriorityLevel) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    function closeModalWindow() {
+      document.getElementById('overlay').classList.add('hid');
+      activeSelectedRoomId = null;
+    }
+
+    async function commitRoomStateStorage() {
+      if (!activeSelectedRoomId) return;
+
+      const inlineNotesText = document.getElementById('m-notes').value.trim();
+      const operatorStaff = document.getElementById('m-staff').value.trim();
+      
+      let computedGlobalStatus = 'ok';
+      if (inlineNotesText.length > 0) {
+        computedGlobalStatus = temporarySelectedPriority;
+      }
+
+      const updateDataPayload = {
+        status: computedGlobalStatus,
+        notes: inlineNotesText,
+        priority: temporarySelectedPriority,
+        staff: operatorStaff,
+        timestamp: new Date().toISOString()
+      };
+
+      await executeRoomStateUpdate(activeSelectedRoomId, updateDataPayload);
+
+      if (computedGlobalStatus !== 'ok') {
+        const duplicatedCheckMatch = globalRegistryLogs.find(log => 
+          log.type === 'prob' && 
+          log.room === activeSelectedRoomId && 
+          log.desc === inlineNotesText && 
+          log.resolved === false
+        );
+
+        if (!duplicatedCheckMatch) {
+          await pushRegistryAuditTrail({
+            type: 'prob',
+            room: activeSelectedRoomId,
+            date: getAppFormattedDateTime(),
+            desc: inlineNotesText,
+            priority: temporarySelectedPriority,
+            manut: operatorStaff,
+            resolved: false,
+            resolvedDate: null
+          });
+        }
+      }
+
+      closeModalWindow();
+    }
+
+    async function triggerPeriodicVerification() {
+      if (!activeSelectedRoomId) return;
+
+      const currentDateTimeStamp = getAppFormattedDateTime();
+      const operatorStaff = document.getElementById('m-staff').value.trim();
+
+      const verificationPayload = {
+        status: 'ok',
+        notes: '',
+        priority: 'bassa',
+        staff: operatorStaff,
+        lastVerificationDate: currentDateTimeStamp,
+        timestamp: new Date().toISOString()
+      };
+
+      await executeRoomStateUpdate(activeSelectedRoomId, verificationPayload);
+
+      await pushRegistryAuditTrail({
+        type: 'check',
+        room: activeSelectedRoomId,
+        date: currentDateTimeStamp,
+        desc: 'Verifica Periodica Completa di controllo programmata eseguita con successo.',
+        priority: 'bassa',
+        manut: operatorStaff,
+        resolved: true,
+        resolvedDate: currentDateTimeStamp
+      });
+
+      closeModalWindow();
+    }
+
+    async function directResolveLeakIncident(logId, targetRoomId) {
+      event.stopPropagation();
+      
+      const currentTimeStampLabel = getAppFormattedDateTime();
+
+      await patchRegistryLogState(logId, {
+        resolved: true,
+        resolvedDate: currentTimeStampLabel
+      });
+
+      await executeRoomStateUpdate(targetRoomId, {
+        status: 'ok',
+        notes: '',
+        priority: 'bassa'
+      });
+    }
+    
+    async function deleteRegistryEntry(logId, roomId) {
+      showPinDialog(async (success) => {
+        if (success) {
+          await deleteRegistryLogEntry(logId, roomId);
+        }
+      });
+    }
+    
+    function printOpenReports() {
+      const openIssues = globalRegistryLogs.filter(log => log.type === 'prob' && log.resolved === false);
+      
+      if (openIssues.length === 0) {
+        alert('Nessun problema aperto da segnalare.');
+        return;
+      }
+      
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(`
+        <html>
+          <head><title>Report Manutenzione - Problemi Aperti</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            h1 { color: #b71c1c; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+            th { background-color: #f5f5f5; }
+            .footer { margin-top: 30px; font-size: 12px; color: #666; text-align: center; }
+          </style>
+          </head>
+          <body>
+            <h1>🏨 Hotel Apogeo - Report Problemi Aperti</h1>
+            <p><strong>Data report:</strong> ${getAppFormattedDateTime()}</p>
+            <p><strong>Totale problemi aperti:</strong> ${openIssues.length}</p>
+            <table>
+              <thead>
+                <tr><th>Stanza</th><th>Data Segnalazione</th><th>Descrizione</th><th>Priorità</th><th>Manutentore</th></tr>
+              </thead>
+              <tbody>
+                ${openIssues.map(issue => `
+                  <tr>
+                    <td>${escapeHtmlInjection(issue.room)}</td>
+                    <td>${escapeHtmlInjection(issue.date)}</td>
+                    <td>${escapeHtmlInjection(issue.desc)}</td>
+                    <td>${PRIORITY_MAP[issue.priority]?.label || issue.priority}</td>
+                    <td>${escapeHtmlInjection(issue.manut || '—')}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+            <div class="footer">Documento generato automaticamente dal sistema di manutenzione Hotel Apogeo</div>
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.print();
+    }
+
+    function renderRegistryArchs() {
+      const typeFilter = document.getElementById('fil-type').value;
+      const roomFilter = document.getElementById('fil-room').value;
+      const statusFilter = document.getElementById('fil-status').value;
+      const querySearchFilter = document.getElementById('fil-q').value.toLowerCase();
+
+      let targetFilteredDataset = globalRegistryLogs.filter(record => {
+        if (typeFilter && record.type !== typeFilter) return false;
+        if (roomFilter && record.room !== roomFilter) return false;
+        
+        if (statusFilter === 'open' && (record.type !== 'prob' || record.resolved === true)) return false;
+        if (statusFilter === 'solved' && record.type === 'prob' && record.resolved === false) return false;
+
+        if (querySearchFilter) {
+          const contentMatchText = (record.room + ' ' + record.desc + ' ' + record.manut).toLowerCase();
+          if (!contentMatchText.includes(querySearchFilter)) return false;
+        }
+        return true;
+      });
+
+      document.getElementById('reg-count').textContent = targetFilteredDataset.length + ' record filtrati';
+      
+      const tableBody = document.getElementById('reg-tbody');
+      const fallbackEmptyCard = document.getElementById('reg-empty');
+
+      if (targetFilteredDataset.length === 0) {
+        tableBody.innerHTML = '';
+        fallbackEmptyCard.style.display = 'block';
+        return;
+      }
+      fallbackEmptyCard.style.display = 'none';
+
+      tableBody.innerHTML = targetFilteredDataset.slice().reverse().map(log => {
+        let rowDesignClass = 'status-solved';
+        let customStatusBadge = '<span class="badge b-solved">Eseguita</span>';
+        let operationActionControls = '';
+
+        if (log.type === 'check') {
+          rowDesignClass = 'type-verify';
+          customStatusBadge = '<span class="badge b-verify">Verifica OK</span>';
+          operationActionControls = `<button class="btn-sm btn-delete" onclick="deleteRegistryEntry('${log.id}', '${log.room}')">🗑️ Cancella</button>`;
+        } else if (log.type === 'prob') {
+          if (!log.resolved) {
+            rowDesignClass = 'status-open';
+            customStatusBadge = '<span class="badge b-open">Aperto</span>';
+            operationActionControls = `<button class="btn-sm btn-solve" onclick="directResolveLeakIncident('${log.id}', '${log.room}')">✓ Risolvi</button>
+                                       <button class="btn-sm btn-delete" style="margin-left:5px;" onclick="deleteRegistryEntry('${log.id}', '${log.room}')">🗑️ Cancella</button>`;
+          } else {
+            rowDesignClass = 'status-solved';
+            customStatusBadge = '<span class="badge b-solved">Risolto</span>';
+            operationActionControls = `<button class="btn-sm btn-delete" onclick="deleteRegistryEntry('${log.id}', '${log.room}')">🗑️ Cancella</button>`;
+          }
+        }
+
+        const prioTagMeta = PRIORITY_MAP[log.priority] || { label: 'Ordinaria', icon: '🔧' };
+
+        return `
+          <tr class="${rowDesignClass}">
+            <td><strong>${escapeHtmlInjection(log.room)}</strong></td>
+            <td style="white-space: nowrap; font-size:10px;">${escapeHtmlInjection(log.date)}</td>
+            <td>
+              <span style="font-weight:600;">${log.type === 'check' ? 'Ispezione Ordinaria' : 'Guasto Rilevato'}</span><br>
+              <span style="color:var(--txt2); font-size:11px;">${escapeHtmlInjection(log.desc)}</span>
+              ${log.manut ? `<br><span style="color:var(--txt3); font-size:10px;">👤 Op: ${escapeHtmlInjection(log.manut)}</span>` : ''}
+            </td>
+            <td><span style="font-size:11px;">${prioTagMeta.icon} ${prioTagMeta.label}</span></td>
+            <td>${customStatusBadge}</td>
+            <td><span style="font-size:11px; font-style:italic;">${log.resolvedDate ? escapeHtmlInjection(log.resolvedDate) : '—'}</span></td>
+            <td>${operationActionControls}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function getAppFormattedDateTime() {
+      const now = new Date();
+      const date = now.toLocaleDateString('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' });
+      const time = now.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' });
+      return `${date} ${time}`;
+    }
+
+    function getAppFormattedDate() {
+      return new Date().toLocaleDateString('it-IT', { year: 'numeric', month: '2-digit', day: '2-digit' });
+    }
+
+    function escapeHtmlInjection(unsafeInputString) {
+      if (unsafeInputString === null || unsafeInputString === undefined) return '';
+      return String(unsafeInputString)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    document.getElementById('overlay').addEventListener('click', function(e) {
+      if (e.target === this) closeModalWindow();
+    });
+
+    document.getElementById('hdr-date').textContent = new Date().toLocaleDateString('it-IT', {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+    });
+    
+    initializeDatabasePipeline();
+  </script>
+</body>
+</html>
